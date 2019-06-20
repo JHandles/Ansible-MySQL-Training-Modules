@@ -1,0 +1,13 @@
+---
+
+- name: apply common configuration to all nodes
+  hosts: all
+  become: yes
+  vars_files:
+    - defaults.yml
+  
+  roles:
+    - common
+    - mysql
+      
+  
