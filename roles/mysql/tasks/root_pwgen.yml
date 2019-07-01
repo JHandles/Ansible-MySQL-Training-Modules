@@ -1,0 +1,14 @@
+---
+
+- name: Install pwgen
+  yum:
+    name: pwgen
+    state: present
+
+- name: Generate 30 character password
+  command: pwgen -C1 30
+  register: mysql_root_pwgen
+
+- name: Set password variable
+  set_fact:
+    mysql_root_password: "£{{mysql_root_pwgen.stdout}}£"
