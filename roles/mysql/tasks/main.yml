@@ -28,6 +28,13 @@
     path: /var/lib/mysql
     state: absent
 
+- name: Remove pre-existing .my.cnf
+  file:
+    path: /root/.my.cnf
+    state: absent
+
+
+# Installing database
 
 - name: install mysql repo
   yum:
@@ -44,8 +51,63 @@
     name: ['mysql-community-server']
     state: latest  
   
+- name: remove any pre-existing content in /var/lib/mysql
+  file:
+    path: /var/lib/mysql
+    state: absent
+
+- name: Initialize 5.6 or older
+  command: mysql_install_db --user=mysql
+  when: (MySQL_version == "56") or (MySQL_version == "55")
+
+- name: native password mysql 8.0
+  lineinfile:
+    path: /etc/my.cnf
+    line: default-authentication-plugin=mysql_native_password
+    state: present
+  when: (MySQL_version == "80")
+
+- name: Initialize 5.7 and newer
+  command: mysqld --initialize-insecure --user=mysql
+  when: (MySQL_version == "57") or (MySQL_version == "80")
+
 - name: start and enable mysql
   service:
     name: mysqld
     state: started
     enabled: yes
+
+# updating root password
+
+- name: add root pw 5.6 or older
+  command: mysqladmin -u root --skip-password password ("{{ mysql_root_password }}")
+  when: (MySQL_version == "56") or (MySQL_version == "55")
+
+
+- name: add root pw 5.7 and newer
+  command: mysql -u root --skip-password --execute "ALTER USER 'root'@'localhost' IDENTIFIED BY ("{{ mysql_root_password }}");"
+  when: (MySQL_version == "57") or (MySQL_version == "80")
+
+- name: Add password.my.cnf
+  include: password.my.cnf.yml
+#  when: mysql_local_my_cnf.stat.exists == False
+
+
+- name: Restart MySQL
+  service:
+    name: mysqld
+    state: restarted
+
+- name: Disallow remote root MySQL logins, remove anonymous users and drop test databases
+  command: >
+    mysql -e '
+    DELETE FROM mysql.user WHERE User="root" AND Host NOT IN ("localhost", "127.0.0.1", "::1");
+    DELETE FROM mysql.user WHERE User="";
+    DROP DATABASE IF EXISTS test;
+    DELETE FROM mysql.db WHERE DB="test" OR DB="test\\_%";
+    FLUSH PRIVILEGES;
+    '
+  when: (MySQL_version == "56") or (MySQL_version == "55")
+
+
+
