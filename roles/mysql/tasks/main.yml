@@ -1,5 +1,34 @@
 ---
 
+# Cleaning server of existing database and installation
+
+- name: Check if pre-existing MySQL service exists
+  stat: path=/etc/init.d/mysqld
+  register: service_status
+
+- name: Stop any pre-existing MySQL service
+  service: name=mysqld state=stopped
+  when: service_status.stat.exists
+  register: service_stopped
+
+- name: Remove any pre-existing mysql install
+  yum:
+    name: mysql*
+    autoremove: no
+    state: absent
+
+- name: Remove any pre-existing mariadb install
+  yum:
+    name: mariadb*
+    autoremove: no
+    state: absent
+
+- name: Remove any pre-existing data
+  file:
+    path: /var/lib/mysql
+    state: absent
+
+
 - name: install mysql repo
   yum:
     name: https://dev.mysql.com/get/mysql80-community-release-el7-2.noarch.rpm
