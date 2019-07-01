@@ -11,9 +11,9 @@
   command: /usr/bin/yum-config-manager --enable mysql{{MySQL_version}}-community
   
 - name: install mysql server
-    yum:
-      name: ['mysql-community-server']
-      state: latest  
+  yum:
+    name: ['mysql-community-server']
+    state: latest  
   
 - name: start and enable mysql
   service:
