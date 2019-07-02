@@ -59,7 +59,7 @@
 
 - name: install mariadb server
   yum:
-    name: ['myariadb-server']
+    name: ['mariadb-server']
     state: latest
   when: (DB_variant == "mariadb")
 

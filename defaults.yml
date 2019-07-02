@@ -3,10 +3,6 @@
 # Version of database to install mariadDB 5.5 or mysql 5.5, 5.6, 5.7 or 8.0 currently supported
 # needs to have the . removed to function.
 
-DB_variant: mysql
-
-MySQL_version: "57"
-when: {{DB_variant}} == mysql
+DB_variant: mariadb
 
 MySQL_version: "55"
-when: {{DB_variant}} == mariadb
