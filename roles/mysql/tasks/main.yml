@@ -124,7 +124,6 @@
 
 - name: Add password.my.cnf
   include: password.my.cnf.yml
-  when: (password_unknown == "false")
 
 
 - name: Restart mysql
@@ -151,5 +150,10 @@
     '
   when: (MySQL_version == "56") or (MySQL_version == "55")
 
+# password_reset training
 
-
+- name: Remove .my.cnf for password_reset training
+  file:
+    path: /root/.my.cnf
+    state: absent
+  when: (password_reset == "yes")
