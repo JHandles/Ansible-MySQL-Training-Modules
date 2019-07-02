@@ -39,19 +39,32 @@
 - name: install mysql repo
   yum:
     name: https://dev.mysql.com/get/mysql80-community-release-el7-2.noarch.rpm
+  when: (DB_variant == "mysql")
    
 - name: disable mysql current repos
   command: /usr/bin/yum-config-manager --disable mysql8*-community && /usr/bin/yum-config-manager --disable mysql5*-community  
+  when: (DB_variant == "mysql")
+
   
 - name: enable repo for desired mysql version
   command: /usr/bin/yum-config-manager --enable mysql{{MySQL_version}}-community
+  when: (DB_variant == "mysql")
+
   
 - name: install mysql server
   yum:
     name: ['mysql-community-server']
     state: latest  
+  when: (DB_variant == "mysql")
+
+- name: install mariadb server
+  yum:
+    name: ['myariadb-server']
+    state: latest
+  when: (DB_variant == "mariadb")
+
   
-- name: remove any pre-existing content in /var/lib/mysql
+- name: remove any pre-existing or installed content in /var/lib/mysql
   file:
     path: /var/lib/mysql
     state: absent
@@ -76,6 +89,15 @@
     name: mysqld
     state: started
     enabled: yes
+  when: (DB_variant == "mysql")
+
+- name: start and enable mariadb
+  service:
+    name: mariadb
+    state: started
+    enabled: yes
+  when: (DB_variant == "mariadb")
+
 
 # generating and updating root password
 
@@ -100,10 +122,18 @@
 #  when: mysql_local_my_cnf.stat.exists == False
 
 
-- name: Restart MySQL
+- name: Restart mysql
   service:
     name: mysqld
     state: restarted
+  when: (DB_variant == "mysql")
+
+- name: Restart mariadb
+  service:
+    name: mariadb
+    state: restarted
+  when: (DB_variant == "mariadb")
+
 
 - name: Disallow remote root MySQL logins, remove anonymous users and drop test databases
   command: >
