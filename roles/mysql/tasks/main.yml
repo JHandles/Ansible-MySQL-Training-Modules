@@ -1,5 +1,10 @@
 ---
 
+#- name: Include specific training modules variable
+#  include_vars: "{{training_module}}.yml"
+#  when: (training_module == true)
+
+
 # Cleaning server of existing database and installation
 
 - name: Check if pre-existing MySQL service exists
@@ -119,7 +124,7 @@
 
 - name: Add password.my.cnf
   include: password.my.cnf.yml
-#  when: mysql_local_my_cnf.stat.exists == False
+  when: (password_unknown == "false")
 
 
 - name: Restart mysql

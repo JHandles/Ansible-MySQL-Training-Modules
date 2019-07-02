@@ -6,3 +6,5 @@
 DB_variant: mariadb
 
 MySQL_version: "55"
+
+password_reset: false
