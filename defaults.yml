@@ -4,6 +4,9 @@
 # needs to have the . removed to function.
 
 DB_variant: mysql
+
 MySQL_version: "57"
+when: {{DB_variant}} == mysql
 
-
+MySQL_version: "55"
+when: {{DB_variant}} == mariadb
