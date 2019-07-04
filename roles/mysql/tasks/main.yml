@@ -152,8 +152,12 @@
 
 # password_reset training
 
-- name: Remove .my.cnf for password_reset training
-  file:
-    path: /root/.my.cnf
-    state: absent
-  when: (password_reset == "yes")
+- name: includes for password_reset training
+  include: password_reset.yml
+  when: (password_reset == "yes") 
+
+#- name: Remove .my.cnf for password_reset training
+#  file:
+#    path: /root/.my.cnf
+#    state: absent
+#  when: (password_reset == "yes")
