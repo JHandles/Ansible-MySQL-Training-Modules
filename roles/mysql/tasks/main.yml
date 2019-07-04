@@ -7,14 +7,24 @@
 
 # Cleaning server of existing database and installation
 
-- name: Check if pre-existing MySQL service exists
-  stat: path=/etc/init.d/mysqld
-  register: service_status
+- name: Check if mysql is running
+  stat: path=/var/run/mysqld/mysqld.pid
+  register: service_status_mysql
 
-- name: Stop any pre-existing MySQL service
+- name: Stop any pre-existing mysql service
   service: name=mysqld state=stopped
-  when: service_status.stat.exists
+  when: service_status_mysql.stat.exists
   register: service_stopped
+
+- name: Check if mariadb is running
+  stat: path=/var/run/mariadb/mariadb.pid
+  register: service_status_mariadb
+
+- name: Stop any pre-existing mariadb service
+  service: name=mariadb state=stopped
+  when: service_status_mariadb.stat.exists
+  register: service_stopped
+
 
 - name: Remove any pre-existing mysql install
   yum:
@@ -156,8 +166,5 @@
   include: password_reset.yml
   when: (password_reset == "yes") 
 
-#- name: Remove .my.cnf for password_reset training
-#  file:
-#    path: /root/.my.cnf
-#    state: absent
-#  when: (password_reset == "yes")
+
+
