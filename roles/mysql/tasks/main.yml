@@ -172,7 +172,10 @@
   include: replication.yml
   when: (replication == "yes")
 
+# slow query analysis
 
-
+- name: includes for query_analysis training
+  include: query_analysis.yml
+  when: (query_analysis == "yes")
 
 
