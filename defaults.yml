@@ -9,3 +9,4 @@ MySQL_version: "55"
 
 password_reset: no
 
+replication: no

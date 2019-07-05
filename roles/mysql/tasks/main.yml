@@ -166,5 +166,13 @@
   include: password_reset.yml
   when: (password_reset == "yes") 
 
+# replication training
+
+- name: includes for replication training
+  includes: replication.yml
+  when: (replication == "yes")
+
+
+
 
 
