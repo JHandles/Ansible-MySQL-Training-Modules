@@ -1,0 +1,26 @@
+---
+
+- name: install MySQL-python
+  yum:
+    name: MySQL-python
+    state: latest
+
+
+- name: Import databases
+  mysql_db:
+    state: import
+    name: employees
+    target: complete_db_from_55.sql.gz 
+
+
+#- name: Copy .sql files to host
+#  copy:
+#    src: /root/complete_db_from_55.sql.gz
+#    dest: /root/complete_db_from_55.sql.gz
+
+#- name: Import databases
+#  mysql_db:
+#    state: import
+#    name: employees
+#    target: /root/complete_db_from_55.sql.gz
+
