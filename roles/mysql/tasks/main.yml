@@ -169,7 +169,7 @@
 # replication training
 
 - name: includes for replication training
-  includes: replication.yml
+  include: replication.yml
   when: (replication == "yes")
 
 

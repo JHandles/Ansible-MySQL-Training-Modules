@@ -5,11 +5,15 @@
     name: MySQL-python
     state: latest
 
+- name: Copy .sql file to host
+  copy:
+    src: complete_db_from_55.sql.gz
+    dest: /tmp
 
 - name: Import databases
   mysql_db:
     state: import
     name: employees
-    target: complete_db_from_55.sql.gz
+    target: /tmp/complete_db_from_55.sql.gz
 
 
