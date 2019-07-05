@@ -7,12 +7,12 @@
 
 - name: Copy .sql file to host
   copy:
-    src: complete_db_from_55.sql.gz
+    src: employees_nokeys.sql.gz 
     dest: /tmp
 
 - name: Import databases
   mysql_db:
     state: import
     name: employees
-    target: /tmp/complete_db_from_55.sql.gz
+    target: /tmp/employees_nokeys.sql.gz
 
