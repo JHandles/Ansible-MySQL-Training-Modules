@@ -16,3 +16,30 @@
     name: employees
     target: /tmp/employees_nokeys.sql.gz
 
+- name: setup slow query
+  shell: watch -n0 'mysql -D employees -e "select * from dept_manager left join employees on dept_manager.emp_no=employees.emp_no left join departments on dept_manager.dept_no=departments.dept_no left join salaries on employees.emp_no=salaries.emp_no;"'
+  async: 2592000  # 1 month
+  poll: 0
+
+- name: setup slow query 2
+  shell: watch -n0 'mysql -D employees -e "select * from dept_manager left join employees on dept_manager.emp_no=employees.emp_no;"'
+  async: 2592000  # 1 month
+  poll: 0
+
+- name: setup slow query 3
+  shell: watch -n0 'mysql -D employees -e "select * from salaries left join titles on salaries.to_date=titles.to_date where salaries.salary = 67391;"'
+  async:  2592000  # 1 month
+  poll: 0
+
+
+- name: setup slow query 4
+  shell: watch -n0 'mysql -D employees -e "select * from salaries left join titles on salaries.to_date=titles.to_date where salaries.salary = 67390;"'
+  async: 2592000  # 1 month
+  poll: 0
+
+
+- name: setup slow query 5 
+  shell: watch -n0 'mysql -D employees -e "select * from salaries left join titles on salaries.to_date=titles.to_date where titles.to_date < '9999-01-01';"'
+  async: 2592000  # 1 month
+  poll: 0
+
