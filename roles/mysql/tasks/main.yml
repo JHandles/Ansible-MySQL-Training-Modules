@@ -130,6 +130,8 @@
   command: mysql -u root --skip-password --execute "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
   when: (MySQL_version == "57") or (MySQL_version == "80")
 
+#- name: flush PRIVILEGES
+#  command: mysql -e 'FLUSH PRIVILEGES;'
 
 
 - name: Add password.my.cnf
@@ -159,6 +161,7 @@
     FLUSH PRIVILEGES;
     '
   when: (MySQL_version == "56") or (MySQL_version == "55")
+
 
 # password_reset training
 
