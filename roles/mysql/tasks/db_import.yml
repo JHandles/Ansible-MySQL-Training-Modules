@@ -26,3 +26,6 @@
 #    name: employees
 #    target: /root/complete_db_from_55.sql.gz
 
+#####################################
+Need to add the mysql_upgrade so this will work with 5.6 and 5.7 also seems that pw reset needs to occur after import
+#####################################
